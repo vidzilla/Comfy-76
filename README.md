@@ -1,6 +1,5 @@
 ![Comfy 76 FET Compressor Emulation](comfy%2076%20fet%20compressor%20emulation%20custom%20node.png)
 
-Comfy-76
 Comfy 76 brings FET-style compression inspired by the 1176 Rev D (blackface) to ComfyUI. Features live looping preview, real-time knob adjustments, dry/wet A/B, adjustable attack and release, selectable ratios, and up to 8x oversampled rendering. Dial in your sound without re-queuing, then render it directly into your audio workflow.
 
 COMFY 76
