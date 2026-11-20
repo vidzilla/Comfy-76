@@ -3,291 +3,359 @@
 Comfy-76
 Comfy 76 brings FET-style compression inspired by the 1176 Rev D (blackface) to ComfyUI. Features live looping preview, real-time knob adjustments, dry/wet A/B, adjustable attack and release, selectable ratios, and up to 8x oversampled rendering. Dial in your sound without re-queuing, then render it directly into your audio workflow.
 
-Comfy 76
-A FET-style compressor for ComfyUI with live preview, real-time controls, and oversampled rendering.
+COMFY 76
 
-Comfy 76 uses a reduced nonlinear JFET feedback model inspired by the classic 1176 Rev D (blackface) compressor. It aims for useful FET-style dynamics and coloration—not a component-accurate recreation of the original hardware.
+A FET-style compressor for ComfyUI with live preview, real-time
+controls, and oversampled rendering.
 
-Queue your source audio once, start Live Preview, and adjust the compressor while the clip loops. No need to re-queue for every knob change.
+Inspired by the classic 1176 Rev D (blackface), Comfy 76 uses a
+simplified nonlinear JFET feedback model for compression and
+coloration. It is not a component-accurate hardware simulation.
 
-Features
-Live Preview — Adjust the compressor while your source clip loops.
-Dry/Wet A/B — Compare processed audio against the original.
-Input and output gain — Drive the compression and level-match the result.
-Attack and release — Familiar 1–7 controls, with higher settings responding faster.
-Selectable ratios — 4, 8, 12, 20, and an approximate all-buttons mode.
-Oversampled rendering — Choose 1×, 2×, 4×, or 8×.
-Linked multichannel detection — Channels share the gain-reduction control.
-Black-and-white styling — Optional appearance extension for supported ComfyUI frontends.
-Installation
-Place the files in your ComfyUI custom nodes directory:
+Queue your audio once, start Live Preview, and adjust the controls
+while the clip loops. No re-queuing is needed to hear knob changes.
 
 
-text
+FEATURES
 
-Copy block
-
-
-ComfyUI/
-└── custom_nodes/
-    └── comfy_76/
-        ├── __init__.py
-        ├── requirements.txt
-        └── web/
-            ├── live_preview.js
-            ├── live_processor.mjs
-            └── appearance.js
-appearance.js provides the optional black-and-white styling.
-
-Install Dependencies
-Use the same Python environment that runs ComfyUI.
-
-From the ComfyUI directory:
+- Live looping preview with real-time control adjustments.
+- Dry/wet A/B comparison.
+- Adjustable input and output gain.
+- Attack and release controls.
+- Ratios of 4, 8, 12, 20, and an approximate all-buttons mode.
+- Offline rendering with 1x, 2x, 4x, or 8x oversampling.
+- Linked multichannel detection.
+- Optional black node appearance with white text and controls.
 
 
-bash
+INSTALLATION
 
-Copy block
+Create this folder inside your ComfyUI installation:
 
+custom_nodes/comfy_76/
+
+Place these files inside it:
+
+__init__.py
+requirements.txt
+web/live_preview.js
+web/live_processor.mjs
+web/appearance.js
+
+The appearance.js file is optional and provides the black-and-white
+node styling.
+
+Install dependencies using the same Python environment that runs
+ComfyUI.
+
+For a standard installation, run this from the ComfyUI directory:
 
 python -m pip install -r custom_nodes/comfy_76/requirements.txt
+
 For Windows Portable, run this from the portable root directory:
 
-
-powershell
-
-Copy block
-
-
 .\python_embeded\python.exe -m pip install -r .\ComfyUI\custom_nodes\comfy_76\requirements.txt
-The additional Python dependencies are:
 
-
-text
-
-Copy block
-
-
-numba
-scipy
 Restart ComfyUI and hard-refresh your browser.
 
-Search for Comfy 76 in the node menu under audio/effects.
-
-Quick Start
-Connect:
+Find Comfy 76 in the node menu under audio/effects.
 
 
-text
+QUICK START
 
-Copy block
+Connect your nodes like this:
+
+Load Audio -> Comfy 76 -> Preview Audio
+
+1. Select your source audio.
+2. Queue the workflow once and wait for it to finish.
+3. Click Live Preview on the Comfy 76 node.
+4. Adjust the compressor while the audio loops.
+5. Use A/B to compare the processed and original audio.
+6. Queue again when you want to render your chosen settings.
+
+To save the result, connect Comfy 76 to an audio-saving node.
+
+Stop any other audio players before starting Live Preview so you
+do not hear multiple streams playing at once.
 
 
-Load Audio → Comfy 76 → Preview Audio
-Select your audio file.
-Queue the workflow once and wait for processing to finish.
-Click Live Preview on the Comfy 76 node.
-Adjust Input, Output, Attack, Release, and Ratio while the clip loops.
-Use A/B to compare dry and wet.
-When you are happy with the settings, queue again to render them to the node’s AUDIO output.
-To export, connect Comfy 76 to an audio-saving node.
+CONTROLS
 
-Stop the separate Preview Audio player before starting Live Preview. Otherwise, both streams may play at the same time.
+Input dB
 
-Controls
-CONTROL	DESCRIPTION
-Input dB	Gain before compression. Increase it to drive more compression and nonlinear coloration.
-Output dB	Gain after compression. Use it to control output level and level-match the dry/wet comparison.
-Attack	1 is slowest; 7 is fastest. Lower settings allow more transient energy through.
-Release	1 is slowest; 7 is fastest. Higher settings recover more quickly between peaks.
-Ratio	Select 4, 8, 12, 20, or All (approx). These are nominal model settings, not measured hardware specifications.
-Oversampling	Processing-rate multiplier for queued renders. Does not affect Live Preview.
-Live Preview	Starts a looping, browser-based preview of the loaded source. Click again to stop.
-A/B: Wet / Dry	Switches the live monitor between processed and original audio. Does not bypass the queued render.
-There is no threshold control. Increase Input dB to push the signal further above the model’s internal threshold, then adjust Output dB to compensate.
+Controls gain before compression. Increase it to drive the signal
+harder into compression and nonlinear coloration.
 
-Suggested Starting Point
-CONTROL	SETTING
-Input	0 dB, then increase to taste
-Output	Adjust to match the dry level
-Attack	4
-Release	4
-Ratio	4
-Oversampling	4×
-Start at a comfortable listening volume, particularly when increasing input or output gain.
+There is no threshold knob. Input gain determines how hard the
+signal hits the model's internal threshold.
 
-Live Preview and Rendered Output
-Live Preview is for dialing in the sound. Queued rendering produces the audio passed to the rest of your workflow.
+Output dB
 
-LIVE PREVIEW	QUEUED RENDER
-Processing location	Browser audio thread	ComfyUI Python backend
-Knob changes	Audible during playback	Applied on the next queue
-Oversampling	1×	Selected setting
-Monitor attenuation	−12 dB	None
-Final clipping guard	Yes, after monitor attenuation	No
-Batch handling	First clip only	Every clip
-A/B button	Dry/wet comparison	No effect
-Both use the same underlying compression model, but they are not sample-identical:
+Controls gain after compression. Use it to set the final level
+and match the loudness of the processed and original audio.
 
-Live Preview runs at the browser audio context’s sample rate.
-Live gain changes are smoothed to reduce clicks.
-The live compressor preserves its state during playback and across loop boundaries.
-Offline rendering starts with fresh state and can use oversampling.
-The −12 dB monitor attenuation affects dry and wet playback equally. It does not change the rendered or saved audio.
+Attack
 
-Rendered output is not peak-limited. Reduce Output dB if your export clips.
+Controls how quickly compression responds.
 
-Which Player Should I Use?
-Load Audio player: Plays the original source file.
-Preview Audio player: Plays the last queued render.
-Comfy 76 Live Preview: Responds to knob changes while playing.
-For real-time adjustment, use the button on Comfy 76 itself.
+1 is slowest.
+7 is fastest.
 
-Changing the Source Clip
-Live Preview uses the source provided by the most recent completed execution.
+Slower settings allow more transient energy through.
 
-To load another clip:
+Release
 
-Stop Live Preview.
-Select the new file in Load Audio.
-Queue the workflow.
-Start Live Preview again.
-Re-queuing does not replace a live loop that is already playing.
+Controls how quickly gain reduction recovers.
+
+1 is slowest.
+7 is fastest.
+
+Ratio
+
+Select 4, 8, 12, 20, or All (approx).
+
+These are nominal model settings rather than measured hardware
+specifications. All (approx) provides an alternate compression
+voicing, not an exact recreation of the hardware's all-buttons
+behavior.
 
 Oversampling
-Oversampling increases the internal processing rate during offline rendering, helping reduce aliasing from the nonlinear model.
 
-1×: Lowest processing cost; useful for quick checks.
-2×: A lighter oversampled option.
-4×: A practical starting point for final renders.
-8×: Higher processing cost for additional oversampling.
-Oversampling does not affect Live Preview.
+Select 1x, 2x, 4x, or 8x for queued rendering.
 
-Browser Requirements
-Live Preview requires:
+Higher settings increase processing cost and can reduce aliasing
+from the nonlinear model.
 
-A browser supporting Web Audio and AudioWorklet
-ComfyUI accessed through localhost or HTTPS
-Browser permission to play audio
-For local use, open:
+This setting does not affect Live Preview.
+
+Live Preview
+
+Starts looping playback of the source loaded by the most recent
+completed execution. Click again to stop playback.
+
+A/B: Wet / Dry
+
+Switches live playback between processed and original audio.
+
+This button affects the live monitor only. It does not bypass
+compression in the queued render.
 
 
-text
+SUGGESTED STARTING SETTINGS
 
-Copy block
+Input:         0 dB, then increase to taste
+Output:        Adjust to match the original loudness
+Attack:        4
+Release:       4
+Ratio:         4
+Oversampling:  4x
 
+Start at a comfortable listening volume, especially when increasing
+input or output gain.
+
+
+LIVE PREVIEW AND RENDERED OUTPUT
+
+Live Preview runs in the browser at 1x processing and uses the
+browser audio context's sample rate.
+
+Queued rendering runs in ComfyUI's Python backend and uses your
+selected oversampling setting.
+
+The live monitor includes 12 dB of attenuation for headroom.
+This affects dry and wet playback equally and does not change
+the rendered output.
+
+Live Preview also includes a final clipping guard. The offline
+render does not, so reduce Output dB if your export clips.
+
+Both paths use the same underlying compression model, but they
+are not sample-identical. Live controls are smoothed, compressor
+state continues across playback and loop boundaries, and browser
+sample-rate conversion may apply.
+
+Offline rendering starts with fresh compressor state.
+
+Live Preview plays the first clip in an audio batch.
+Queued rendering processes every clip in the batch.
+
+
+WHICH PLAY BUTTON TO USE
+
+The Load Audio player plays the original file.
+
+The Preview Audio player plays the last queued render.
+
+The Live Preview button on Comfy 76 responds to knob changes
+while the audio plays.
+
+For real-time adjustment, use Live Preview on Comfy 76 itself.
+
+
+CHANGING THE SOURCE AUDIO
+
+1. Stop Live Preview.
+2. Select another source file.
+3. Queue the workflow and wait for it to finish.
+4. Start Live Preview again.
+
+Queuing a different source does not replace a loop that is
+already playing.
+
+
+BROWSER REQUIREMENTS
+
+Live Preview requires a browser with Web Audio and AudioWorklet
+support.
+
+Open ComfyUI through localhost or HTTPS.
+
+For local use, the usual address is:
 
 http://localhost:8188
-Plain HTTP access through a remote machine’s IP address may prevent AudioWorklet from running.
 
-Live Preview processes a loaded audio clip. It is not a microphone input, DAW insert, or system-audio processor.
+Plain HTTP access through another machine's IP address may prevent
+AudioWorklet from running.
 
-How It Works
-Comfy 76 combines:
+Live Preview processes loaded audio clips. It is not a microphone
+input, DAW insert, or system-audio processor.
 
-A nonlinear JFET shunt model
-Sample-by-sample feedback detection
-Shared gain control across channels
-Attack and release smoothing
-A simple program-dependent release memory
-Low-frequency DC removal
-Optional oversampling for offline rendering
-The DSP uses effective model parameters rather than a direct transcription of the original circuit’s component values.
 
-Modeling Limitations
-Comfy 76 does not fully reproduce:
+APPEARANCE
 
-Input and output transformers
-Discrete signal preamplifier and line-amplifier stages
-The original gain-control amplifier and detector circuitry
-The original ratio pushbutton network
-Component tolerances, noise, and hardware calibration
-Original metering circuitry
-All (approx) is an alternate compression voicing, not an exact simulation of the hardware’s all-buttons behavior.
+The optional appearance.js extension gives Comfy 76 a black body,
+dark controls, and white text.
 
-Appearance
-The optional appearance.js extension gives Comfy 76:
+It targets canvas-rendered ComfyUI controls. Frontends using
+DOM/Vue-rendered controls may require additional styling.
 
-A black node body
-A dark title bar and controls
-White text and control markings
-This targets canvas-rendered ComfyUI controls. Frontends using DOM/Vue-rendered controls may require additional styling.
+The extension is intended to style Comfy 76 only.
 
-The extension is intended to change Comfy 76 only, leaving other nodes unchanged.
 
-Troubleshooting
-Comfy 76 Does Not Appear
-Confirm that __init__.py is inside custom_nodes/comfy_76/.
-Make sure the filename is not __init__.py.txt.
-Restart ComfyUI.
-Check the startup terminal for import errors.
-Install dependencies using the Python environment that runs ComfyUI.
-Live Preview Buttons Are Missing
-Confirm that WEB_DIRECTORY = "./web" is present in __init__.py.
-Verify that the live-preview files are inside the web directory.
-Keep the processor filename as live_processor.mjs.
-Restart ComfyUI and hard-refresh the browser.
-Check the browser console for JavaScript errors.
-Live Preview Asks Me to Queue First
-Connect Comfy 76 to Preview Audio or an audio-saving output node, queue the workflow, and wait for it to finish.
+TROUBLESHOOTING
 
-Knob Changes Do Not Affect What I Hear
-Make sure you are using Live Preview on Comfy 76, not one of the separate audio players.
+Comfy 76 does not appear:
 
-Also check that A/B is set to Wet.
+- Check that __init__.py is inside custom_nodes/comfy_76/.
+- Make sure the filename does not end in .txt.
+- Restart ComfyUI.
+- Check the startup terminal for import errors.
+- Install dependencies in ComfyUI's Python environment.
 
-Live Preview Will Not Start
-Access ComfyUI through localhost or HTTPS.
-Allow audio playback if the browser prompts you.
-Check the browser console for errors.
-If ComfyUI has restarted or its temporary files were cleared, queue the workflow again.
-The Sound Is Distorted or Too Loud
-Reduce Input dB or Output dB.
+Live Preview buttons are missing:
 
-The live monitor has a final clipping guard, but excessive gain can still produce audible clipping. Offline output has no final clipping guard.
+- Check that the web folder contains both live-preview files.
+- Keep the processor filename as live_processor.mjs.
+- Restart ComfyUI and hard-refresh the browser.
+- Check the browser console for JavaScript errors.
 
-Live Preview Is Quieter Than the Export
-This is expected. Live Preview has −12 dB of monitor attenuation. That attenuation is not applied to the queued render.
+Live Preview asks you to queue first:
 
-The First Render Takes Longer
-Numba compiles the processing function on first use. Later executions can reuse the compiled function within the same running session.
+- Connect Comfy 76 to Preview Audio or an audio-saving output.
+- Queue the workflow and wait for it to finish.
 
-Playback Stutters
-Try a shorter clip, close other demanding browser tabs, and keep the ComfyUI tab active.
+Knob changes do not affect playback:
 
-Live Preview performance depends on the browser, device, channel count, and other running workloads.
+- Use Live Preview on Comfy 76, not a separate audio player.
+- Make sure A/B is set to Wet.
 
-The Node Is Not Black with White Controls
-Install web/appearance.js, restart ComfyUI, and hard-refresh the browser.
+Live Preview will not start:
 
-Styling support depends on the frontend and how its controls are rendered.
+- Open ComfyUI through localhost or HTTPS.
+- Allow browser audio playback if prompted.
+- Check the browser console for errors.
+- Queue again if ComfyUI restarted or temporary files were cleared.
 
-Temporary Files
-Each completed execution writes a dry float-WAV file to ComfyUI’s temporary directory for browser preview.
+The sound is too loud or distorted:
 
-Long clips use additional disk space and browser memory.
-Live Preview loads the first clip of an audio batch.
-The offline AUDIO output processes every clip in the batch.
-Comfy 76 does not immediately delete preview files after playback; cleanup follows ComfyUI’s temporary-file handling.
-Upgrading from the Earlier Node
-This version uses:
+- Reduce Input dB or Output dB.
+- Excessive monitor gain can hit the live clipping guard.
+- Offline output is not peak-limited.
 
-ITEM	NAME
-Folder	comfy_76
-Registered node ID	comfy_76
-Display name	Comfy 76
+Live Preview sounds quieter than the export:
+
+- This is expected.
+- Live monitoring has 12 dB of attenuation.
+- Rendered output does not include that attenuation.
+
+The first render takes longer:
+
+- Numba compiles the processing function on first use.
+- Later executions can reuse it during the same ComfyUI session.
+
+Playback stutters:
+
+- Try a shorter clip.
+- Close demanding browser tabs.
+- Keep the ComfyUI tab active.
+
+The black-and-white appearance is missing:
+
+- Check that web/appearance.js is installed.
+- Restart ComfyUI and hard-refresh the browser.
+- Styling support depends on your frontend.
+
+
+TEMPORARY FILES
+
+Each completed execution writes a dry float-WAV file to ComfyUI's
+temporary directory for browser preview.
+
+Long clips require additional disk space and browser memory.
+
+Comfy 76 does not immediately delete these files after playback.
+Cleanup follows ComfyUI's temporary-file handling.
+
+
+UPGRADING FROM THE EARLIER NODE
+
+Folder:             comfy_76
+Registered node ID: comfy_76
+Display name:       Comfy 76
+
 Remove the earlier comfy_1176 installation if you no longer need it.
 
-Existing workflows referencing the old node must have their compressor replaced with Comfy 76.
+Existing workflows referencing the old node must have their
+compressor replaced with Comfy 76.
 
-References and Acknowledgments
-The classic 1176 Rev D (blackface) compressor provides the hardware inspiration.
 
-Hardware reference material includes M. Nats’ DIY 1176LN Rev D, Version 2 schematic and bill of materials, dated 30 April 2008. That document describes the hardware’s signal preamplifier, line amplifier, gain-reduction control amplifier, meter driver, power supply, and associated components.
+MODEL LIMITATIONS
 
-Comfy 76 does not implement that schematic as a complete component-level simulation. Its JFET parameters, detector calibration, timing behavior, and all-buttons response are simplified DSP approximations.
+Comfy 76 does not fully reproduce the original hardware's:
 
-Trademark Notice
-Universal Audio and its product names and trademarks belong to their respective owners. References to the 1176 and Rev D hardware are used solely to identify the design inspiration.
+- Input and output transformers.
+- Discrete preamplifier and line-amplifier stages.
+- Gain-control amplifier and detector circuitry.
+- Ratio pushbutton network.
+- Component tolerances, noise, or calibration.
+- Metering circuitry.
 
-Comfy 76 is an independent project and is not affiliated with, sponsored by, or endorsed by Universal Audio or M. Nats.
+The DSP uses effective model parameters rather than a direct
+transcription of the original circuit's component values.
+
+
+REFERENCES AND ACKNOWLEDGMENTS
+
+This custom node vibecoded by Corey Milner, Calgary Alberta, is released into the public domain with no limitations or warranties. It is not an exact re-creation of the original circuit, but it gives a quality working emulation for similar audio compression in Comfy UI natively.
+
+The classic 1176 Rev D (blackface) compressor provides the hardware
+inspiration.
+
+Hardware reference material includes M. Nats' DIY 1176LN Rev D,
+Version 2 schematic and bill of materials, dated 30 April 2008.
+
+Comfy 76 does not implement that schematic as a complete
+component-level simulation. Its JFET parameters, detector
+calibration, timing behavior, and all-buttons response are
+simplified DSP approximations.
+
+
+TRADEMARK NOTICE
+
+Third-party product names and trademarks belong to their
+respective owners. References to the 1176 and Rev D hardware
+are used solely to identify the design inspiration.
+
+Comfy 76 is an independent project and is not affiliated with,
+sponsored by, or endorsed by Universal Audio or M. Nats.
