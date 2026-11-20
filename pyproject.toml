@@ -1,0 +1,27 @@
+[project]
+name = "comfy-76"
+version = "1.0.0"
+description = "FET-style audio compression for ComfyUI, inspired by the 1176 Rev D (blackface). Live preview, real-time controls, dry/wet A/B, and oversampled rendering."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "vidzilla" },
+]
+dependencies = [
+    "numba",
+    "scipy",
+]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Sound/Audio",
+]
+
+[project.urls]
+Repository = "https://github.com/vidzilla/Comfy-76"
+"Bug Tracker" = "https://github.com/vidzilla/Comfy-76/issues"
+
+[tool.comfy]
+PublisherId = "vidzilla"
+DisplayName = "Comfy 76"
+includes = ["web"]
